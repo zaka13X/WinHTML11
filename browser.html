@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Edge Interface</title>
+    <style>
+        /* Base Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-size: 12px;
+            user-select: none;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            background-color: #1c1c1c;
+        }
+
+        /* Main Window Container */
+        .window {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: #2b2b2b;
+            color: #e3e3e3;
+        }
+
+        /* Top Title Bar & Tab System */
+        .title-bar {
+            display: flex;
+            align-items: flex-end;
+            height: 40px;
+            background-color: #202020;
+            padding-right: 140px; /* Space for window controls */
+            position: relative;
+        }
+
+        .tabs-container {
+            display: flex;
+            align-items: flex-end;
+            padding-left: 10px;
+            height: 100%;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        /* Hide scrollbars for cleaner browser look */
+        .tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 190px;
+            height: 34px;
+            border-radius: 6px 6px 0 0;
+            padding: 0 10px;
+            margin-right: 4px;
+            cursor: default;
+            position: relative;
+            background-color: transparent;
+            color: #a0a0a0;
+            flex-shrink: 0;
+        }
+
+        /* Active Tab Styling */
+        .tab.active {
+            background-color: #2b2b2b;
+            color: #ffffff;
+        }
+
+        /* Inactive/Background Tabs use a Base64 encoded background for Edge styling */
+        .tab:not(.active) {
+            /* Base64 encoded subtle gradient pattern that mimics Edge's transparent tab styling */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMCUiIHkyPSIxMDAlIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjA1Ii8+CjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjAyIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+');
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: none;
+        }
+
+        .tab:not(.active):hover {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMCUiIHkyPSIxMDAlIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjA5Ii8+CjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjA0Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+');
+            color: #e3e3e3;
+        }
+
+        .tab-content {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 85%;
+            pointer-events: none; /* Let click pass to the tab component */
+        }
+
+        .tab-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .tab-title {
+            font-size: 11.5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tab-close {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #a0a0a0;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .tab-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .new-tab-btn {
+            width: 28px;
+            height: 28px;
+            margin-bottom: 3px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #a0a0a0;
+            flex-shrink: 0;
+        }
+
+        .new-tab-btn:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        /* Toolbar: Back, Forward, Refresh, URL Bar */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            height: 48px;
+            background-color: #2b2b2b;
+            padding: 0 8px;
+            gap: 4px;
+            border-bottom: 1px solid #202020;
+        }
+
+        .nav-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e3e3e3;
+            cursor: pointer;
+        }
+
+        .nav-btn.disabled {
+            color: #606060;
+            cursor: default;
+        }
+
+        .nav-btn:not(.disabled):hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Address Bar Container */
+        .address-bar-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            height: 32px;
+            background-color: #202020;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 0 12px;
+            gap: 8px;
+        }
+
+        .address-bar-container:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .address-icon {
+            color: #107c41; /* Green lock indicator */
+        }
+
+        .address-input {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #e3e3e3;
+            outline: none;
+            font-size: 12px;
+            user-select: text;
+        }
+
+        /* Browser Content Area */
+        .content-area {
+            flex-grow: 1;
+            background-color: #1f1f1f;
+            position: relative;
+        }
+
+        /* Web View Frame */
+        .web-view {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #ffffff;
+            display: none; /* Controlled via JS */
+        }
+
+        .web-view.active {
+            display: block;
+        }
+
+        /* Window Controls Mockup */
+        .window-controls {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            height: 32px;
+        }
+
+        .win-btn {
+            width: 46px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 10px;
+        }
+
+        .win-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .win-btn.close:hover {
+            background-color: #e81123;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <!-- Title Bar -->
+        <div class="title-bar">
+            <!-- Dynamic Tab Insertion Point -->
+            <div class="tabs-container" id="tabs-container"></div>
+
+            <!-- Fake Window Controls -->
+            <div class="window-controls">
+                <div class="win-btn">―</div>
+                <div class="win-btn">❑</div>
+                <div class="win-btn close">✕</div>
+            </div>
+        </div>
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="nav-btn disabled">➔</div>
+            <div class="nav-btn disabled" style="transform: scaleX(-1);">➔</div>
+            <div class="nav-btn" onclick="reloadCurrentFrame()">↻</div>
+            <div class="nav-btn">⌂</div>
+            
+            <div class="address-bar-container">
+                <span class="address-icon">🔒</span>
+                <input type="text" id="url-input" class="address-input" value="" placeholder="Search or enter web address">
+            </div>
+
+            <div class="nav-btn">👤</div>
+            <div class="nav-btn">⋯</div>
+        </div>
+
+        <!-- Main Content Area where multi-iframes persist -->
+        <div class="content-area" id="content-area"></div>
+    </div>
+
+    <script>
+        // Config base proxy string
+        const PROXY_DOMAIN = "https://vultureserver.onrender.com/";
+
+        const tabsContainer = document.getElementById('tabs-container');
+        const contentArea = document.getElementById('content-area');
+        const urlInput = document.getElementById('url-input');
+
+        let tabList = [];
+        let activeTabId = null;
+
+        // Custom template for Edge SVG Icon
+        const edgeIconSvg = `<svg class="tab-icon" viewBox="0 0 128 128"><path fill="#0c59a4" d="M64 4C30.9 4 4 30.9 4 64s26.9 60 60 60 60-26.9 60-60S97.1 4 64 4zm22 76c-4.4 7.8-11.6 13-20 14-16.5 2-30-10.5-30-27 0-14.5 10.5-25.5 25-27 10.5-1.1 19.5 4.4 23 13.5H53c-6.6 0-12 5.4-12 12s5.4 12 12 12h35c1.1 0 2-.9 2-2V78c0-1.1-.9-2-2-2z"/></svg>`;
+
+        // Render layout tabs and sync frames
+        function renderTabs() {
+            // Clear prior dynamic lists except the add button
+            tabsContainer.innerHTML = '';
+
+            tabList.forEach(tab => {
+                const tabEl = document.createElement('div');
+                tabEl.className = `tab ${tab.id === activeTabId ? 'active' : ''}`;
+                tabEl.dataset.id = tab.id;
+                
+                tabEl.innerHTML = `
+                    <div class="tab-content">
+                        ${edgeIconSvg}
+                        <span class="tab-title">${tab.title || 'New Tab'}</span>
+                    </div>
+                    <div class="tab-close" data-id="${tab.id}">✕</div>
+                `;
+
+                // Handle click onto main tab box body to select active status
+                tabEl.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('tab-close')) return;
+                    switchTab(tab.id);
+                });
+
+                // Handle tab close click action
+                tabEl.querySelector('.tab-close').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeTab(tab.id);
+                });
+
+                tabsContainer.appendChild(tabEl);
+            });
+
+            // Re-append the New Tab Button element at the end
+            const newTabBtn = document.createElement('div');
+            newTabBtn.className = 'new-tab-btn';
+            newTabBtn.textContent = '＋';
+            newTabBtn.onclick = () => createNewTab('');
+            tabsContainer.appendChild(newTabBtn);
+        }
+
+        // Add a brand-new website instance tab
+        function createNewTab(initialUrl = '') {
+            const id = 'tab_' + Math.random().toString(36).substr(2, 9);
+            
+            const newTab = {
+                id: id,
+                title: initialUrl || 'New Tab',
+                url: initialUrl
+            };
+
+            tabList.push(newTab);
+
+            // Generate matching Frame element viewport
+            const iframe = document.createElement('iframe');
+            iframe.id = `frame_${id}`;
+            iframe.className = 'web-view';
+            contentArea.appendChild(iframe);
+
+            switchTab(id);
+            updateFrameUrl(id, initialUrl);
+        }
+
+        // Switch workspace visualization frame
+        function switchTab(id) {
+            activeTabId = id;
+            const targetTab = tabList.find(t => t.id === id);
+
+            // Update visible input text
+            urlInput.value = targetTab ? targetTab.url : '';
+
+            // Toggle frames class active lists
+            document.querySelectorAll('.web-view').forEach(frame => {
+                frame.classList.remove('active');
+            });
+
+            const currentFrame = document.getElementById(`frame_${id}`);
+            if (currentFrame) {
+                currentFrame.classList.add('active');
+            }
+
+            renderTabs();
+        }
+
+        // Close selected dynamic item 
+        function closeTab(id) {
+            const index = tabList.findIndex(t => t.id === id);
+            if (index === -1) return;
+
+            // Delete actual workspace frames element node
+            const targetFrame = document.getElementById(`frame_${id}`);
+            if (targetFrame) targetFrame.remove();
+
+            // Extract item from list arrays
+            tabList.splice(index, 1);
+
+            // Calculate state if closing currently looked at item
+            if (activeTabId === id) {
+                if (tabList.length > 0) {
+                    // Fall back to nearby item arrays
+                    const nextActiveId = tabList[index] ? tabList[index].id : tabList[index - 1].id;
+                    switchTab(nextActiveId);
+                } else {
+                    activeTabId = null;
+                    urlInput.value = '';
+                    renderTabs();
+                }
+            } else {
+                renderTabs();
+            }
+        }
+
+        // Handles conditional logic for empty URLs versus active URLs
+        function updateFrameUrl(id, rawUrl) {
+            const targetTab = tabList.find(t => t.id === id);
+            if (!targetTab) return;
+
+            targetTab.url = rawUrl;
+            targetTab.title = rawUrl || 'New Tab';
+
+            const currentFrame = document.getElementById(`frame_${id}`);
+            if (currentFrame) {
+                if (rawUrl === '') {
+                    // If no URL has been entered yet, look at the root system file template
+                    currentFrame.src = '/newtab.html';
+                } else {
+                    // Strict direct string combination logic
+                    currentFrame.src = PROXY_DOMAIN + rawUrl;
+                }
+            }
+
+            renderTabs();
+        }
+
+        // Address bar interaction tracking
+        urlInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                if (activeTabId) {
+                    updateFrameUrl(activeTabId, this.value.trim());
+                } else {
+                    // Automatically open up string context inside a new tab structure
+                    createNewTab(this.value.trim());
+                }
+                this.blur();
+            }
+        });
+
+        function reloadCurrentFrame() {
+            if (!activeTabId) return;
+            const currentFrame = document.getElementById(`frame_${activeTabId}`);
+            if (currentFrame) {
+                currentFrame.contentWindow.location.reload();
+            }
+        }
+
+        // Start out with a clean blank tab session on start
+        createNewTab('');
+    </script>
+</body>
+</html>
