@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Explorer</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body {
+            background: #191919;
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* Top Command Toolbar */
+        .toolbar {
+            height: 48px;
+            background: #202020;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 8px;
+        }
+        .tool-btn {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 12px; font-size: 12px; border-radius: 4px;
+            cursor: pointer;
+        }
+        .tool-btn:hover { background: rgba(255, 255, 255, 0.06); }
+        .separator { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.1); margin: 0 4px; }
+
+        /* Address Navigation Bar */
+        .address-bar-container {
+            height: 40px;
+            background: #202020;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; align-items: center; padding: 0 16px; gap: 12px;
+        }
+        .nav-arrows { display: flex; gap: 16px; color: rgba(255, 255, 255, 0.4); font-size: 14px; }
+        .address-box {
+            flex: 1; background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px; padding: 4px 12px; font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Workspace Core Split Layout */
+        .workspace { display: flex; flex: 1; overflow: hidden; }
+        .side-tree {
+            width: 180px; background: #202020; padding: 12px 8px;
+            display: flex; flex-direction: column; gap: 2px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .tree-item {
+            font-size: 12px; padding: 6px 8px; border-radius: 4px;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+        }
+        .tree-item:hover, .tree-item.active { background: rgba(255, 255, 255, 0.06); }
+        
+        /* Main Folder Contents View Grid */
+        .folder-view {
+            flex: 1; padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            grid-auto-rows: max-content;
+            gap: 20px; overflow-y: auto;
+        }
+        .file-item {
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; cursor: pointer; padding: 8px; border-radius: 4px;
+            border: 1px solid transparent; transition: background 0.1s;
+        }
+        .file-item:hover {
+            background: rgba(96, 205, 255, 0.05);
+            border: 1px solid rgba(96, 205, 255, 0.15);
+        }
+        .file-icon { font-size: 40px; margin-bottom: 6px; }
+        .file-name { font-size: 12px; max-width: 80px; word-break: break-all; }
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <div class="tool-btn" style="font-weight: 600; color: #60cdff;">➕ New</div>
+        <div class="separator"></div>
+        <div class="tool-btn">✂️</div>
+        <div class="tool-btn">📋</div>
+        <div class="tool-btn">🏷️ Rename</div>
+        <div class="tool-btn">🗑️ Delete</div>
+    </div>
+
+    <div class="address-bar-container">
+        <div class="nav-arrows">
+            <span>&larr;</span>
+            <span>&rarr;</span>
+            <span>&uarr;</span>
+        </div>
+        <div class="address-box">This PC &gt; Home</div>
+    </div>
+
+    <div class="workspace">
+        <div class="side-tree">
+            <div class="tree-item active">⭐ Home</div>
+            <div class="tree-item">💻 This PC</div>
+            <div class="tree-item">📥 Downloads</div>
+            <div class="tree-item">📄 Documents</div>
+            <div class="tree-item">🖼️ Pictures</div>
+        </div>
+
+        <div class="folder-view">
+            <div class="file-item" onclick="alert('Opening Documents folder')">
+                <div class="file-icon">📁</div>
+                <div class="file-name">Documents</div>
+            </div>
+            <div class="file-item" onclick="alert('Opening Downloads folder')">
+                <div class="file-icon">📁</div>
+                <div class="file-name">Downloads</div>
+            </div>
+            <div class="file-item" onclick="alert('Opening Pictures folder')">
+                <div class="file-icon">📁</div>
+                <div class="file-name">Pictures</div>
+            </div>
+            <div class="file-item" onclick="alert('Opening Videos folder')">
+                <div class="file-icon">📁</div>
+                <div class="file-name">Videos</div>
+            </div>
+            <div class="file-item" onclick="alert('Running setup configuration logs...')">
+                <div class="file-icon">⚙️</div>
+                <div class="file-name">config.ini</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
