@@ -24,6 +24,9 @@
             flex-direction: column;
             justify-content: space-between;
             overflow: hidden;
+            
+            /* Applies custom vector pointer tracking from system32 folder ONLY inside Start Menu bounds */
+            cursor: url('system32/cursor.svg'), auto; 
         }
 
         /* Search Bar Input Container */
@@ -41,7 +44,6 @@
             border-radius: 4px;
             color: #ccc;
             font-size: 13px;
-            cursor: text;
         }
 
         /* Section Title Layouts */
@@ -248,9 +250,9 @@
                 <div class="app-icon">📁</div>
                 <div class="app-name">Files</div>
             </div>
-            <div class="app-item" onclick="launch('/networks.html', 'Networks and Connections')">
-                <div class="app-icon">🛜</div>
-                <div class="app-name">Networks</div>
+            <div class="app-item" onclick="launch('/networks.html', 'Network Settings')">
+                <div class="app-icon">📶</div>
+                <div class="app-name">Network</div>
             </div>
         </div>
     </div>
@@ -262,18 +264,18 @@
         </div>
 
         <div class="recommended-layout">
-            <div class="rec-item" onclick="launch('/games.html', 'Games')">
-                <div class="rec-icon">🎮</div>
+            <div class="rec-item" onclick="launch('/system32/winver.html', 'About Windows')">
+                <div class="rec-icon">ℹ️</div>
                 <div class="rec-info">
-                    <span class="rec-name">Recent Game</span>
-                    <span class="rec-time">2h ago</span>
+                    <span class="rec-name">About Windows</span>
+                    <span class="rec-time">Just now</span>
                 </div>
             </div>
-            <div class="rec-item" onclick="launch('/settings.html', 'Settings')">
-                <div class="rec-icon">⚙️</div>
+            <div class="rec-item" onclick="launch('/networks.html', 'Network Settings')">
+                <div class="rec-icon">📶</div>
                 <div class="rec-info">
-                    <span class="rec-name">System Settings</span>
-                    <span class="rec-time">Yesterday</span>
+                    <span class="rec-name">Ethernet Status</span>
+                    <span class="rec-time">2h ago</span>
                 </div>
             </div>
         </div>
@@ -281,11 +283,11 @@
 
     <!-- System User Profile Bottom Tray -->
     <div class="profile-bar">
-        <div class="user-info">
+        <div class="user-info" onclick="launch('/system32/winver.html', 'About Windows')">
             <div class="avatar">U</div>
             <span class="username">Guest User</span>
         </div>
-        <div class="power-btn" onclick="alert('Shutting down... jk!')">⏻</div>
+        <div class="power-btn" onclick="alert('Shutting down... jk, jk')">⏻</div>
     </div>
 
     <!-- Frame Shell Action Engine Interceptor -->
