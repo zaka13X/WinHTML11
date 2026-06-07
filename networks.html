@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network & Internet</title>
+    <style>
+        /* Base Reset & Variables */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background: #202020;
+            color: #ffffff;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 30px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        /* Active Connection Header Component */
+        .connection-status {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-icon {
+            font-size: 32px;
+            color: #60cdff; /* Active connection accent glow */
+        }
+
+        .status-info h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .status-info p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+        }
+
+        .ip-label {
+            font-family: 'Consolas', monospace;
+            color: #60cdff;
+            background: rgba(96, 205, 255, 0.1);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        /* Section Headings */
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-left: 4px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Wi-Fi Networks Stack */
+        .wifi-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .wifi-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .wifi-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .wifi-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .wifi-icon {
+            font-size: 18px;
+            color: #60cdff;
+        }
+
+        .wifi-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .secure-badge {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .connect-btn {
+            font-size: 12px;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 6px 14px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 0; 
+            transition: opacity 0.15s;
+        }
+
+        .wifi-item:hover .connect-btn {
+            opacity: 1;
+        }
+
+        .connect-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Current Connection State -->
+    <div class="connection-status">
+        <div class="status-icon">🖥️</div>
+        <div class="status-info">
+            <h2>Connected to Ethernet (모)/eth0</h2>
+            <p>Internet access secured &bull; Connected</p>
+            <p id="ipContainer">IP Address: <span class="ip-label">Fetching allocation...</span></p>
+        </div>
+    </div>
+
+    <!-- Available Wi-Fi Networks Group -->
+    <div>
+        <h3 class="section-title">Available WiFi networks</h3>
+        
+        <div class="wifi-list">
+            <div class="wifi-item" onclick="connectWifi('PLACEHOLDER_1')">
+                <div class="wifi-left">
+                    <div class="wifi-icon">📶</div>
+                    <span class="wifi-name">FBI Surveillance Van #12</span>
+                    <span class="secure-badge">🔒 Secured</span>
+                </div>
+                <button class="connect-btn">Connect</button>
+            </div>
+
+            <div class="wifi-item" onclick="connectWifi('PLACEHOLDER_2')">
+                <div class="wifi-left">
+                    <div class="wifi-icon">📶</div>
+                    <span class="wifi-name">McDonald's Free WiFi</span>
+                    <span class="secure-badge">🔒 Secured</span>
+                </div>
+                <button class="connect-btn">Connect</button>
+            </div>
+
+            <div class="wifi-item" onclick="connectWifi('PLACEHOLDER_3')">
+                <div class="wifi-left">
+                    <div class="wifi-icon">📶</div>
+                    <span class="wifi-name">xfintywifi</span>
+                    <span class="secure-badge">🔒 Secured</span>
+                </div>
+                <button class="connect-btn">Connect</button>
+            </div>
+
+            <div class="wifi-item" onclick="connectWifi('PLACEHOLDER_4')">
+                <div class="wifi-left">
+                    <div class="wifi-icon">📶</div>
+                    <span class="wifi-name">Joe's House</span>
+                    <span class="secure-badge">🔒 Secured</span>
+                </div>
+                <button class="connect-btn">Connect</button>
+            </div>
+
+            <div class="wifi-item" onclick="connectWifi('PLACEHOLDER_5')">
+                <div class="wifi-left">
+                    <div class="wifi-icon">📶</div>
+                    <span class="wifi-name">Walmart Free WiFi</span>
+                    <span class="secure-badge">🔒 Secured</span>
+                </div>
+                <button class="connect-btn">Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Logic Script -->
+    <script>
+        // Executes immediately to trigger JSON asynchronous parsing routines
+        window.addEventListener('DOMContentLoaded', fetchPublicIP);
+
+        async function fetchPublicIP() {
+            const labelContainer = document.querySelector('.ip-label');
+            try {
+                // Explicitly requests JSON formatting using api.ipify.org query variables
+                const response = await fetch('https://api.ipify.org/?format=json');
+                if (!response.ok) throw new Error('Network error');
+                
+                // Parses arriving payload stream cleanly into an object literal
+                const data = await response.json();
+                labelContainer.textContent = data.ip; 
+            } catch (error) {
+                console.error("IP Resolution Failed:", error);
+                labelContainer.textContent = "172.17.69.67)";
+                labelContainer.style.color = "rgba(255, 255, 255, 0.4)";
+                labelContainer.style.background = "rgba(255, 255, 255, 0.05)";
+            }
+        }
+
+        function connectWifi(name) {
+            alert("Attempting connection authorization payload sequence to target access node: " + name);
+        }
+    </script>
+</body>
+</html>
