@@ -24,7 +24,7 @@
         .desktop {
             width: 100%;
             height: 100%;
-            background-image: url('https://winblogs.thesourcemediaassets.com/sites/2/2021/10/Windows-11-Bloom-Screensaver-Dark-scaled.jpg');
+            background-image: url('https://thesourcemediaassets.com');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -49,6 +49,7 @@
             border-radius: 4px;
             border: 1px solid transparent;
             transition: background 0.2s;
+            z-index: 1;
         }
 
         .shortcut:hover {
@@ -56,7 +57,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* Generic Icon styling using modern Windows 11 Fluent emojis */
+        /* Icon Styling */
         .shortcut .icon {
             font-size: 32px;
             margin-bottom: 5px;
@@ -76,14 +77,14 @@
             padding: 0 2px;
         }
 
-        /* Authentic Windows 11 App Window */
+        /* Main App Window Layout */
         .window {
             position: absolute;
             top: 10%;
             left: 15%;
             width: 70%;
             height: 70%;
-            background: rgba(28, 28, 28, 0.85); /* Windows dark theme look */
+            background: rgba(28, 28, 28, 0.85);
             backdrop-filter: blur(30px);
             border-radius: 8px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -94,12 +95,29 @@
             z-index: 10;
         }
 
-        /* Hidden State for Window */
-        .window.hidden {
+        /* Start Menu Flyout Panel Layout */
+        .start-menu {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 450px;
+            height: 550px;
+            background: rgba(28, 28, 28, 0.9);
+            backdrop-filter: blur(30px);
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            overflow: hidden;
+            z-index: 50;
+        }
+
+        /* State management toggles */
+        .window.hidden, .start-menu.hidden {
             display: none;
         }
 
-        /* Window Title Bar */
+        /* Title Bar Customizations */
         .title-bar {
             height: 40px;
             display: flex;
@@ -115,7 +133,6 @@
             color: #ffffff;
         }
 
-        /* Windows style controls */
         .controls {
             display: flex;
             height: 100%;
@@ -141,7 +158,7 @@
             background-color: #e81123 !important;
         }
 
-        /* Iframe Content Area */
+        /* Embedded Context Configurations */
         .content {
             flex: 1;
             border: none;
@@ -150,7 +167,7 @@
             height: 100%;
         }
 
-        /* Windows 11 Taskbar */
+        /* Core Taskbar System Layout */
         .taskbar {
             position: absolute;
             bottom: 0;
@@ -192,28 +209,28 @@
 <body>
 
     <!-- Desktop Environment -->
-    <div class="desktop">
+    <div id="desktopEnv" class="desktop">
 
         <!-- Edge Shortcut -->
-        <div class="shortcut" onclick="openApp('/browser.html', 'Microsoft Edge')">
+        <div class="shortcut" onclick="openApp('/browser.html', 'Microsoft Edge', event)">
             <div class="icon">🌐</div>
             <span>Microsoft Edge</span>
         </div>
 
         <!-- Games Shortcut -->
-        <div class="shortcut" onclick="openApp('/games.html', 'Games')">
+        <div class="shortcut" onclick="openApp('/games.html', 'Games', event)">
             <div class="icon">🎮</div>
             <span>Games</span>
         </div>
 
         <!-- Proxy Shortcut -->
-        <div class="shortcut" onclick="openApp('/proxy.html', 'Proxy')">
+        <div class="shortcut" onclick="openApp('/proxy.html', 'Proxy', event)">
             <div class="icon">🛡️</div>
             <span>Proxy</span>
         </div>
 
-        <!-- Virtual App Window -->
-        <div id="appWindow" class="window hidden">
+        <!-- Virtual App Window Framework -->
+        <div id="appWindow" class="window hidden" onclick="event.stopPropagation()">
             <div class="title-bar">
                 <span id="windowTitle" class="window-title">Application</span>
                 <div class="controls">
@@ -222,39 +239,59 @@
                     <div class="control-btn btn-close" onclick="closeApp()">&#10005;</div>
                 </div>
             </div>
-            <!-- The Dynamic IFrame target -->
+            <!-- Dynamic Subframe Sandbox Node -->
             <iframe id="appFrame" src="" class="content"></iframe>
         </div>
 
+        <!-- Start Menu Modular Panel -->
+        <div id="startMenuPanel" class="start-menu hidden" onclick="event.stopPropagation()">
+            <iframe src="/start.html" class="content"></iframe>
+        </div>
+
     </div>
 
-    <!-- Windows 11 Taskbar -->
+    <!-- Windows 11 Centered Taskbar Components -->
     <div class="taskbar">
         <div class="taskbar-center">
-            <div class="taskbar-icon" onclick="toggleStartMenu()">🔷</div>
-            <div class="taskbar-icon" onclick="openApp('/browser.html', 'Microsoft Edge')"></div>
-            <div class="taskbar-icon" onclick="openApp('/games.html', 'Games')">🎮</div>
-            <div class="taskbar-icon" onclick="openApp('/proxy.html', 'Proxy')">🛡️</div>
+            <div class="taskbar-icon" onclick="toggleStartMenu(event)">🔷</div>
+            <div class="taskbar-icon" onclick="openApp('/browser.html', 'Microsoft Edge', event)">🌐</div>
+            <div class="taskbar-icon" onclick="openApp('/games.html', 'Games', event)">🎮</div>
+            <div class="taskbar-icon" onclick="openApp('/proxy.html', 'Proxy', event)">🛡️</div>
         </div>
     </div>
 
-    <!-- Windows Engine Logic -->
+    <!-- State Logic Control Core Engine -->
     <script>
         const appWindow = document.getElementById('appWindow');
         const appFrame = document.getElementById('appFrame');
         const windowTitle = document.getElementById('windowTitle');
+        const startMenuPanel = document.getElementById('startMenuPanel');
+        const desktopEnv = document.getElementById('desktopEnv');
 
-        // Function to launch app and load destination into the iframe
-        function openApp(url, title) {
+        // Handles standard file and browser window state rendering
+        function openApp(url, title, event) {
+            if (event) event.stopPropagation();
+            startMenuPanel.classList.add('hidden');
             windowTitle.textContent = title;
             appFrame.src = url;
             appWindow.classList.remove('hidden');
         }
 
-        // Window control functions
+        // Context switcher for opening and closing start.html 
+        function toggleStartMenu(event) {
+            if (event) event.stopPropagation();
+            startMenuPanel.classList.toggle('hidden');
+        }
+
+        // Detects background workspace interaction to auto-hide panel views
+        desktopEnv.addEventListener('click', () => {
+            startMenuPanel.classList.add('hidden');
+        });
+
+        // Memory dump and window hiding functions
         function closeApp() {
             appWindow.classList.add('hidden');
-            appFrame.src = ""; // Clears iframe session memory on close
+            appFrame.src = ""; 
         }
 
         function minimizeApp() {
@@ -270,17 +307,12 @@
                 appWindow.style.borderRadius = "8px";
             } else {
                 appWindow.style.width = "100%";
-                appWindow.style.height = "calc(100% - 48px)"; // Keeps taskbar visible
+                appWindow.style.height = "calc(100% - 48px)";
                 appWindow.style.top = "0";
                 appWindow.style.left = "0";
                 appWindow.style.borderRadius = "0";
             }
         }
-
-        function toggleStartMenu() {
-            alert("Start Menu clicked! Modify this function to open a custom panel.");
-        }
     </script>
 </body>
 </html>
-
