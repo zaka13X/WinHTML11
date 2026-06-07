@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Windows</title>
+    <style>
+        /* Base Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: #1f1f1f; /* Authentic Windows 11 dialog box background */
+            color: #ffffff;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 24px;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        /* Top Layout Header Content */
+        .content-area {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        /* Responsive Logo Container */
+        .logo-container {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .win11-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0px 0px 12px rgba(96, 205, 255, 0.4)); /* Preserves the native glow effect */
+        }
+
+        /* Text Details Layout */
+        .details-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .os-title {
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .version-string {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            width: 100%;
+            margin: 4px 0;
+        }
+
+        /* Main Explanatory License Text Block */
+        .license-text {
+            font-size: 12px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+            max-height: 180px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        /* Custom Scrollbar styling matching the standard Win11 track */
+        .license-text::-webkit-scrollbar {
+            width: 4px;
+        }
+        .license-text::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+        }
+
+        .bold-text {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Bottom Action Tray */
+        .action-tray {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 16px;
+        }
+
+        /* Standardized Windows OS Primary Action Button */
+        .win-btn {
+            background: #2d2d2d;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12px;
+            padding: 6px 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.1s, border-color 0.1s;
+        }
+
+        .win-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .win-btn:active {
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom-width: 1px;
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Diagnostic Information Layout Block -->
+    <div class="content-area">
+        <!-- Image Placeholder Node Container -->
+        <div class="logo-container">
+            <!-- Swap the placeholder URL below with your actual image path -->
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOxYL1ESXVU3dbGhhKUf6YqL2WmXGdPWC2GomXKeBJF40CE2YRMvKptE91&s=10" alt="Windows Logo" class="win11-logo-img">
+        </div>
+        
+        <div class="details-pane">
+            <h1 class="os-title">Windows 11</h1>
+            <div class="divider"></div>
+            
+            <p class="version-string">
+                Version 25H2 (OS Build 2669.6741)<br>
+                <span class="bold-text">Copyright © WINHTML11.</span> All rights reserved.
+            </p>
+
+            <div class="license-text">
+                The Windows 11 Professional operating system and its user interface are protected by trademark and other pending or existing intellectual property rights in the United States and other regions.<br><br>
+                This product is licensed under the <span class="bold-text">WINHTML11 Software License Terms</span> to:<br>
+                <span class="bold-text">User Name:</span> Guest Developer<br>
+                <span class="bold-text">Organization:</span> Local Workspace Sandbox
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Confirmation Row -->
+    <div class="action-tray">
+        <button class="win-btn" onclick="closeDialog()">OK</button>
+    </div>
+
+    <!-- Interface Closure Intercept Logic -->
+    <script>
+        function closeDialog() {
+            // Commands the shell system to slide away the containing app window node frame
+            if (window.parent && typeof window.parent.closeApp === 'function') {
+                window.parent.closeApp();
+            } else {
+                alert("Dialog dismissed! Closing window session execution loop.");
+            }
+        }
+    </script>
+</body>
+</html>
