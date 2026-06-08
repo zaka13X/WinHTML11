@@ -6,6 +6,16 @@
     <title>Untitled - Notepad</title>
     <style>
         :root {
+            --bg-color: #1e1e1e;
+            --text-color: #ffffff;
+            --menu-bg: #202020;
+            --menu-hover: #2d2d2d;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --status-bg: #202020;
+            --status-color: #a0a0a0;
+        }
+
+        body.light-mode {
             --bg-color: rgba(243, 243, 243, 0.85);
             --text-color: #000000;
             --menu-bg: #f0f0f0;
@@ -13,16 +23,6 @@
             --border-color: rgba(0, 0, 0, 0.1);
             --status-bg: #f3f3f3;
             --status-color: #606060;
-        }
-
-        body.dark-mode {
-            --bg-color: rgba(32, 32, 32, 0.9);
-            --text-color: #ffffff;
-            --menu-bg: #2b2b2b;
-            --menu-hover: #404040;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --status-bg: #2b2b2b;
-            --status-color: #a0a0a0;
         }
 
         * {
@@ -60,6 +60,7 @@
 
         .menu-item:hover {
             background: var(--menu-hover);
+            border-radius: 4px;
         }
 
         .dropdown {
@@ -68,10 +69,12 @@
             top: 100%;
             left: 0;
             background: var(--menu-bg);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             min-width: 180px;
             z-index: 10;
             border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 4px 0;
         }
 
         .menu-item:hover .dropdown {
@@ -116,6 +119,14 @@
             overflow: auto;
         }
 
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        body.light-mode textarea::placeholder {
+            color: rgba(0, 0, 0, 0.3);
+        }
+
         textarea.word-wrap {
             white-space: pre-wrap;
         }
@@ -148,7 +159,7 @@
                 <div class="dropdown-item" onclick="saveFile()">Save</div>
                 <div class="dropdown-item" onclick="saveAsFile()">Save As...</div>
                 <div class="dropdown-divider"></div>
-                <div class="dropdown-item" onclick="toggleTheme()">Toggle Dark Mode</div>
+                <div class="dropdown-item" onclick="toggleTheme()">Toggle Light Mode</div>
             </div>
         </div>
         <div class="menu-item">Edit
@@ -200,7 +211,7 @@
         }
 
         function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
         }
 
         function toggleWordWrap() {
