@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>idk</title>
+    <title>system32 process xbox.exe</title>
     <style>
-        .styled-iframe {
-            /* Defines a thin, light gray border */
-            border: 1px solid #ccc; 
-            /* Optional rounded corners */
-            border-radius: 4px;     
-            /* Sets iframe width */
-            width: 100%;            
-            /* Sets iframe height */
-            height: 500px;          
+        /* Removes default browser margins and scrollbars */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; 
+            background-color: #000; /* Matches typical fallback backgrounds */
+        }
+
+        /* Forces iframe to fill the entire viewport */
+        .fullscreen-iframe {
+            width: 100%;
+            height: 100%;
+            border: none; /* Removes default iframe borders */
+            display: block; /* Eliminates vertical alignment gaps */
         }
     </style>
 </head>
 <body>
 
     <!-- Replace the placeholder URL with your actual link -->
-    <iframe src="https://zakas-ubg.vercel.app/ " class="styled-iframe">    </iframe>
+    <iframe src="https://zakas-ubg.vercel.app" class="fullscreen-iframe"></iframe>
 
 </body>
 </html>
