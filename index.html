@@ -3,316 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WinHTML11</title>
+    <title> Login</title>
     <style>
-        /* Base Reset */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        body, html {
-            width: 100%;
-            height: 100%;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        body {
+            /* REPLACE PLACEHOLDER: Replace 'url(your-image-url.jpg)' with your specific background image or use a solid color */
+            background: url('https://fastly.jsdelivr.net/gh/zaka13X/WinHTML11/system32/Windows-11-Bloom-Screensaver-Dark-scaled.jpg')no-repeat center center fixed;
+            background-size: cover;
+            background-color: #0d1f2d; 
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -100px; /* Shifts content slightly upward like Win 11 */
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #d1d1d1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             overflow: hidden;
         }
 
-        /* Desktop Background */
-        .desktop {
-            width: 100%;
-            height: 100%;
-            background-image: url('https://fastly.jsdelivr.net/gh/zaka13X/WinHTML11/system32/Windows-11-Bloom-Screensaver-Dark-scaled.jpg');
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            align-content: flex-start;
-            padding: 20px;
-            gap: 20px;
-        }
-
-        /* Desktop Shortcuts */
-        .shortcut {
-            width: 80px;
-            height: 90px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 4px;
-            border: 1px solid transparent;
-            transition: background 0.2s;
-            z-index: 1;
-        }
-
-        .shortcut:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        /* Icon Styling */
-        .shortcut .icon {
-            font-size: 32px;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-        }
-
-        .shortcut span {
-            color: white;
-            font-size: 12px;
-            text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
-            word-break: break-word;
-            max-width: 100%;
-            padding: 0 2px;
-        }
-
-        /* Main App Window Layout */
-        .window {
-            position: absolute;
-            top: 10%;
-            left: 15%;
+        .avatar svg {
             width: 70%;
             height: 70%;
-            background: rgba(28, 28, 28, 0.85);
-            backdrop-filter: blur(30px);
-            border-radius: 8px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 10;
+            fill: #666;
         }
 
-        /* Start Menu Flyout Panel Layout */
-        .start-menu {
+        .username {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            position: relative;
+            width: 320px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 15px;
+            outline: none;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .login-input:focus {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .submit-btn {
             position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 450px;
-            height: 550px;
-            background: rgba(28, 28, 28, 0.9);
-            backdrop-filter: blur(30px);
-            border-radius: 8px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            overflow: hidden;
-            z-index: 50;
-        }
-
-        /* State management toggles */
-        .window.hidden, .start-menu.hidden {
-            display: none;
-        }
-
-        /* Title Bar Customizations */
-        .title-bar {
-            height: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(32, 32, 32, 0.6);
-            cursor: default;
-            padding-left: 16px;
-        }
-
-        .window-title {
-            font-size: 12px;
-            color: #ffffff;
-        }
-
-        .controls {
-            display: flex;
-            height: 100%;
-        }
-
-        .control-btn {
-            width: 46px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-size: 11px;
-            cursor: pointer;
-            transition: background 0.1s;
-        }
-
-        .control-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-close:hover {
-            background-color: #e81123 !important;
-        }
-
-        /* Embedded Context Configurations */
-        .content {
-            flex: 1;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
             border: none;
-            background: #1f1f1f;
-            width: 100%;
-            height: 100%;
+            color: white;
+            cursor: pointer;
+            padding: 5px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
         }
 
-        /* Core Taskbar System Layout */
-        .taskbar {
+        .submit-btn:hover {
+            opacity: 1;
+        }
+
+        .submit-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .login-text {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        /* Bottom right controls */
+        .bottom-controls {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 48px;
-            background: rgba(32, 32, 32, 0.85);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 20px;
+            font-size: 18px;
+        }
+
+        .control-icon {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 100;
-        }
-
-        .taskbar-center {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .taskbar-icon {
-            font-size: 24px;
             width: 36px;
             height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-
-        .taskbar-icon:hover {
-            background: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body>
 
-    <!-- Desktop Environment -->
-    <div id="desktopEnv" class="desktop">
-
-        <!-- Edge Shortcut -->
-        <div class="shortcut" onclick="openApp('/browser.html', 'Microsoft Edge', event)">
-            <div class="icon">🌐</div>
-            <span>Microsoft Edge</span>
+    <div class="login-container">
+        <!-- User Avatar -->
+        <div class="avatar">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
         </div>
+        
+        <!-- Administrator at the top -->
+        <div class="username">Administrator</div>
 
-        <!-- Games Shortcut -->
-        <div class="shortcut" onclick="openApp('/games.html', 'Games', event)">
-            <div class="icon">🎮</div>
-            <span>Games</span>
-        </div>
-
-        <!-- Proxy Shortcut -->
-        <div class="shortcut" onclick="openApp('/proxy.html', 'Proxy', event)">
-            <div class="icon">🛡️</div>
-            <span>Proxy</span>
-        </div>
-
-        <!-- Virtual App Window Framework -->
-        <div id="appWindow" class="window hidden" onclick="event.stopPropagation()">
-            <div class="title-bar">
-                <span id="windowTitle" class="window-title">Application</span>
-                <div class="controls">
-                    <div class="control-btn" onclick="minimizeApp()">&#9472;</div>
-                    <div class="control-btn" onclick="maximizeApp()">&#9633;</div>
-                    <div class="control-btn btn-close" onclick="closeApp()">&#10005;</div>
-                </div>
-            </div>
-            <!-- Dynamic Subframe Sandbox Node -->
-            <iframe id="appFrame" src="" class="content"></iframe>
-        </div>
-
-        <!-- Start Menu Modular Panel -->
-        <div id="startMenuPanel" class="start-menu hidden" onclick="event.stopPropagation()">
-            <iframe src="/start.html" class="content"></iframe>
-        </div>
-
+        <!-- Password Entry -->
+        <form class="input-group" action="/dwm.html" method="GET">
+            <input type="password" class="login-input" placeholder="Password" required>
+            <button type="submit" class="submit-btn" aria-label="Submit">
+                <svg viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </button>
+        </form>
+        
+        <div class="login-text">Sign-in options</div>
     </div>
 
-    <!-- Windows 11 Centered Taskbar Components -->
-    <div class="taskbar">
-        <div class="taskbar-center">
-            <div class="taskbar-icon" onclick="toggleStartMenu(event)">🔷</div>
-            <div class="taskbar-icon" onclick="openApp('/browser.html', 'Microsoft Edge', event)">🌐</div>
-            <div class="taskbar-icon" onclick="openApp('/games.html', 'Games', event)">🎮</div>
-            <div class="taskbar-icon" onclick="openApp('/proxy.html', 'Proxy', event)">🛡️</div>
-        </div>
+    <!-- Win 11 style bottom-right corner icons (Accessibility, Power, etc.) -->
+    <div class="bottom-controls">
+        <div class="control-icon">👁️</div>
+        <div class="control-icon">📶</div>
+        <div class="control-icon">⏻</div>
     </div>
 
-    <!-- State Logic Control Core Engine -->
-    <script>
-        const appWindow = document.getElementById('appWindow');
-        const appFrame = document.getElementById('appFrame');
-        const windowTitle = document.getElementById('windowTitle');
-        const startMenuPanel = document.getElementById('startMenuPanel');
-        const desktopEnv = document.getElementById('desktopEnv');
-
-        // Handles standard file and browser window state rendering
-        function openApp(url, title, event) {
-            if (event) event.stopPropagation();
-            startMenuPanel.classList.add('hidden');
-            windowTitle.textContent = title;
-            appFrame.src = url;
-            appWindow.classList.remove('hidden');
-        }
-
-        // Context switcher for opening and closing start.html 
-        function toggleStartMenu(event) {
-            if (event) event.stopPropagation();
-            startMenuPanel.classList.toggle('hidden');
-        }
-
-        // Detects background workspace interaction to auto-hide panel views
-        desktopEnv.addEventListener('click', () => {
-            startMenuPanel.classList.add('hidden');
-        });
-
-        // Memory dump and window hiding functions
-        function closeApp() {
-            appWindow.classList.add('hidden');
-            appFrame.src = ""; 
-        }
-
-        function minimizeApp() {
-            appWindow.classList.add('hidden');
-        }
-
-        function maximizeApp() {
-            if(appWindow.style.width === "100%") {
-                appWindow.style.width = "70%";
-                appWindow.style.height = "70%";
-                appWindow.style.top = "10%";
-                appWindow.style.left = "15%";
-                appWindow.style.borderRadius = "8px";
-            } else {
-                appWindow.style.width = "100%";
-                appWindow.style.height = "calc(100% - 48px)";
-                appWindow.style.top = "0";
-                appWindow.style.left = "0";
-                appWindow.style.borderRadius = "0";
-            }
-        }
-    </script>
 </body>
 </html>
