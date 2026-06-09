@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 11 Login</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* REPLACE PLACEHOLDER: Replace 'url(your-image-url.jpg)' with your specific background image or use a solid color */
+            background: url('PLACEHOLDER') no-repeat center center fixed;
+            background-size: cover;
+            background-color: #0d1f2d; 
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -100px; /* Shifts content slightly upward like Win 11 */
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #d1d1d1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .avatar svg {
+            width: 70%;
+            height: 70%;
+            fill: #666;
+        }
+
+        .username {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            position: relative;
+            width: 320px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 15px;
+            outline: none;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .login-input:focus {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .submit-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .submit-btn:hover {
+            opacity: 1;
+        }
+
+        .submit-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .login-text {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        /* Bottom right controls */
+        .bottom-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 20px;
+            font-size: 18px;
+        }
+
+        .control-icon {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- User Avatar -->
+        <div class="avatar">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+        </div>
+        
+        <!-- Administrator at the top -->
+        <div class="username">Administrator</div>
+
+        <!-- Password Entry -->
+        <form class="input-group" action="/dwm.html" method="GET">
+            <input type="password" class="login-input" placeholder="Password" required>
+            <button type="submit" class="submit-btn" aria-label="Submit">
+                <svg viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            </button>
+        </form>
+        
+        <div class="login-text">Sign-in options</div>
+    </div>
+
+    <!-- Win 11 style bottom-right corner icons (Accessibility, Power, etc.) -->
+    <div class="bottom-controls">
+        <div class="control-icon"></div>
+        <div class="control-icon">📶</div>
+        <div class="control-icon">⏻</div>
+    </div>
+
+</body>
+</html>
