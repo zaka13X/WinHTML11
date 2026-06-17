@@ -1,4 +1,3 @@
-// Correct root domain variable matching your endpoint layout
 const PROXY_BASE = "https://proxy.2677929.xyz";
 
 self.addEventListener('install', (event) => {
@@ -9,25 +8,34 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(self.clients.claim());
 });
 
+// Catches sub-requests requested relatively inside your iframe frame
 self.addEventListener('fetch', (event) => {
     const requestUrl = event.request.url;
 
-    // Checks for simulated tracking path
-    if (requestUrl.includes('/browser/')) {
+    // Only rewrite requests that are slipping off the proxy domain and trying to hitting your own host domain
+    if (!requestUrl.startsWith(PROXY_BASE) && !requestUrl.includes('edge/sw.js') && !requestUrl.includes('edge/index.html')) {
         
-        // Extract destination details following the separation marker
-        const parts = requestUrl.split('/browser/');
-        let targetUrl = parts;
+        let targetUrl = requestUrl;
 
-        // Reconnect standard structural colons if altered
+        // If a relative path looks for an asset on your host server (e.g. localhost/edge/style.css)
+        if (targetUrl.includes(self.location.host)) {
+            const parts = targetUrl.split(self.location.host);
+            let cleanPath = parts || '';
+            // Strip out structural subfolder artifacts
+            cleanPath = cleanPath.replace(/^\/edge\//, '');
+            
+            // Remap back to a standard target web protocol address
+            targetUrl = 'https://' + cleanPath;
+        }
+
+        // Enforce strict protocol formatting
         targetUrl = targetUrl.replace(/^(https?:\/)(?!\/)/, '$1/');
 
-        // Fallback layout generation to match strict protocol format
         if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
             targetUrl = 'https://' + targetUrl;
         }
 
-        // FIXED: Uses backticks to combine variables properly without string errors
+        // Append resource exactly as required: https://2677929.xyzhttps://domain.com/asset.js
         const finalProxyUrl = `${PROXY_BASE}${targetUrl}`;
 
         const modifiedHeaders = new Headers(event.request.headers);
