@@ -171,7 +171,7 @@
     <div class="tab-bar">
         <div class="tab active">
             <div class="tab-icon"></div>
-            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Edge Hash-Proxy</span>
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Edge Custom Proxy</span>
             <div class="tab-close">&times;</div>
         </div>
     </div>
@@ -195,7 +195,8 @@
     <div class="content-area">
         <iframe id="browser-viewport" src=""></iframe>
     </div>
-        <script>
+
+    <script>
         const urlInput = document.getElementById('url-input');
         const viewport = document.getElementById('browser-viewport');
         const refreshBtn = document.getElementById('refresh-btn');
@@ -203,9 +204,8 @@
         async function initProxy() {
             if ('serviceWorker' in navigator) {
                 try {
-                    // Lock the service worker scope to the current folder
                     await navigator.serviceWorker.register('./sw.js', { scope: './' });
-                    console.log('Hash-based Proxy Active.');
+                    console.log('running inside /edge/ subfolder.');
                     loadUrl();
                 } catch (err) {
                     console.error('Service Worker registration failed:', err);
@@ -217,11 +217,11 @@
             let input = urlInput.value.trim();
             if (!input) return;
 
-            // Remove any existing protocols typed out by the user
+            // Remove existing protocols so we pass a clean domain string
             input = input.replace(/^(https?:\/\/)?(www\.)?/, '');
             
-            // Constructs target as: https://2677929.xyz
-            viewport.src = `https://proxy.2677929.xyz/{input}`;
+            // FIXED: Uses backticks ( ` ) instead of single/double quotes to evaluate the variable correctly
+            viewport.src = `./browser/https://${input}`;
         }
 
         urlInput.addEventListener('keypress', (e) => {
