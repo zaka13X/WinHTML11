@@ -1,4 +1,4 @@
-const PROXY_BASE = "https://proxy.2677929.xyz/";
+const PROXY_BASE = "https://proxy.2677929.xyz";
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
@@ -8,25 +8,23 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(self.clients.claim());
 });
 
+// Intercept sub-assets (CSS, JS, images) requested relative to the iframe
 self.addEventListener('fetch', (event) => {
     const requestUrl = event.request.url;
 
-    // Checks for /browser/ anywhere inside the subfolder's request path
-    if (requestUrl.includes('/browser/')) {
+    // Skip rewriting if the request is already pointing to the proxy endpoint
+    if (!requestUrl.startsWith(PROXY_BASE) && !requestUrl.includes('edge/sw.js') && !requestUrl.includes('edge/index.html')) {
         
-        // Split precisely at the simulation directory layout marker
-        const parts = requestUrl.split('/browser/');
-        let targetUrl = parts[1];
+        let targetUrl = requestUrl;
 
-        // Correct malformed layout paths or double slashes
-        targetUrl = targetUrl.replace(/^(https?:\/)(?!\/)/, '$1/');
-
-        // Fallback protocol generation for clean routing
-        if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
-            targetUrl = 'https://' + targetUrl;
+        // Strip local dev host strings if relative assets are misrouted locally
+        if (targetUrl.includes(self.location.host)) {
+            const parts = targetUrl.split(self.location.host);
+            // Reconstruct asset pointer cleanly 
+            targetUrl = 'https://' + parts[1].replace(/^\/edge\//, '');
         }
 
-        // Construct target layout matching your proxy
+        // Construct target template: (proxy)/https://(destination)
         const finalProxyUrl = `${PROXY_BASE}${targetUrl}`;
 
         const modifiedHeaders = new Headers(event.request.headers);
@@ -38,7 +36,7 @@ self.addEventListener('fetch', (event) => {
                 credentials: event.request.credentials,
                 mode: 'cors'
             }).catch(err => {
-                return new Response(`Proxy Routing Failure: ${err.message}`, { 
+                return new Response(`Proxy Failure on Asset: ${err.message}`, { 
                     status: 502,
                     headers: { 'Content-Type': 'text/plain' }
                 });
