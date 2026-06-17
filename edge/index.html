@@ -204,8 +204,9 @@
         async function initProxy() {
             if ('serviceWorker' in navigator) {
                 try {
+                    // Registers the helper script directly inside the /edge/ folder scope
                     await navigator.serviceWorker.register('./sw.js', { scope: './' });
-                    console.log('running inside /edge/ subfolder.');
+                    console.log('Edge Service Worker Interceptor Active.');
                     loadUrl();
                 } catch (err) {
                     console.error('Service Worker registration failed:', err);
@@ -220,8 +221,8 @@
             // Remove existing protocols so we pass a clean domain string
             input = input.replace(/^(https?:\/\/)?(www\.)?/, '');
             
-            // FIXED: Uses backticks ( ` ) instead of single/double quotes to evaluate the variable correctly
-            viewport.src = `./browser/https://${input}`;
+            // 404 PROOF: Points directly to your proxy address from the first frame render!
+            viewport.src = `https://proxy.2677929.xyz{input}`;
         }
 
         urlInput.addEventListener('keypress', (e) => {
