@@ -3,237 +3,417 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edge Browser</title>
+    <title>WinHTML11 Browser</title>
     <style>
-        :root {
-            --bg-color: #f3f3f3;
-            --border-color: #e0e0e0;
-            --text-color: #242424;
-            --input-bg: #ffffff;
-            --tab-active: #ffffff;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #202020;
-                --border-color: #2c2c2c;
-                --text-color: #ffffff;
-                --input-bg: #2d2d2d;
-                --tab-active: #2d2d2d;
-            }
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            user-select: none;
         }
-
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
+            height: 100vh;
+            background-color: #121212;
+            color: #e0e0e0;
+            padding: 12px;
+            gap: 12px;
             overflow: hidden;
         }
-
-        /* Tabs Bar */
-        .tab-bar {
+        /* Top Navigation Controls Bar */
+        .controls-bar {
             display: flex;
-            align-items: flex-end;
-            padding: 8px 8px 0 8px;
-            background-color: var(--bg-color);
-            height: 40px;
+            flex-direction: column;
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #2d2d2d;
+            gap: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
-
+        .url-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        input[type="url"] {
+            flex-grow: 1;
+            padding: 10px 14px;
+            font-size: 15px;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border: 1px solid #3d3d3d;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="url"]:focus {
+            border-color: #bb86fc;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            background-color: #bb86fc;
+            color: #121212;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #da9eff;
+        }
+        .toggle-btn {
+            background-color: #333333;
+            color: #e0e0e0;
+            border: 1px solid #444444;
+            padding: 10px 14px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .toggle-btn.active-engine {
+            background-color: #03dac6;
+            color: #121212;
+            border-color: #03dac6;
+        }
+        
+        /* Multi-Tab Bar Container */
+        .tabs-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tabs-container::-webkit-scrollbar {
+            display: none;
+        }
         .tab {
             display: flex;
             align-items: center;
-            background-color: transparent;
-            padding: 6px 16px;
-            border-radius: 8px 8px 0 0;
-            font-size: 12px;
-            max-width: 240px;
-            min-width: 140px;
-            border: 1px solid transparent;
-            border-bottom: none;
-            margin-right: 4px;
-        }
-
-        .tab.active {
-            background-color: var(--tab-active);
-            border-color: var(--border-color);
-        }
-
-        .tab-icon {
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
-            background: linear-gradient(135deg, #0078d4, #00bcf2);
-            border-radius: 4px;
-        }
-
-        .tab-close {
-            margin-left: auto;
+            background: #2a2a2a;
+            color: #a0a0a0;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            border-radius: 4px;
-            width: 16px;
-            height: 16px;
-            text-align: center;
-            line-height: 14px;
-        }
-
-        .tab-close:hover {
-            background-color: rgba(0,0,0,0.1);
-        }
-
-        /* Toolbar */
-        .toolbar {
-            display: flex;
-            align-items: center;
-            background-color: var(--tab-active);
-            padding: 6px 10px;
-            border-bottom: 1px solid var(--border-color);
+            border: 1px solid #3d3d3d;
+            user-select: none;
             gap: 8px;
+            max-width: 160px;
+            white-space: nowrap;
         }
-
-        .nav-btn {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            cursor: pointer;
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
+        .tab.active {
+            background: #bb86fc;
+            color: #121212;
+            border-color: #bb86fc;
+            font-weight: 600;
+        }
+        .tab-close {
+            font-weight: bold;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 11px;
+            transition: background 0.2s;
+        }
+        .tab.active .tab-close:hover {
+            background: rgba(0,0,0,0.2);
+        }
+        .tab:not(.active) .tab-close:hover {
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+        }
+        .add-tab-btn {
+            background: #2a2a2a;
+            color: #bb86fc;
+            border: 1px dashed #bb86fc;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .add-tab-btn:hover {
+            background: #332940;
         }
 
-        .nav-btn:hover {
-            background-color: rgba(0,0,0,0.05);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .nav-btn:hover { background-color: rgba(255,255,255,0.05); }
-        }
-
-        .nav-btn svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-        }
-
-        /* Address Bar */
-        .address-bar-container {
+        /* Rendering Environment Frame viewports */
+        .viewer-container {
             flex-grow: 1;
             position: relative;
-        }
-
-        .address-bar {
-            width: 100%;
-            height: 32px;
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 0 16px;
-            color: var(--text-color);
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.1s;
-        }
-
-        .address-bar:focus {
-            border-color: #0078d4;
-            box-shadow: 0 0 0 1px #0078d4;
-        }
-
-        /* Browser Window Content */
-        .content-area {
-            flex-grow: 1;
             background-color: #ffffff;
-            position: relative;
+            border-radius: 8px;
+            border: 1px solid #2d2d2d;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
         }
-
         iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             border: none;
             background-color: #ffffff;
+            display: none;
+        }
+        iframe.active {
+            display: block;
+        }
+        
+        #error-banner {
+            display: none;
+            padding: 10px 14px;
+            background-color: #cf6679;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
-    <div class="tab-bar">
-        <div class="tab active">
-            <div class="tab-icon"></div>
-            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Edge Custom Proxy</span>
-            <div class="tab-close">&times;</div>
+    <div class="controls-bar">
+        <div class="tabs-container" id="tabsContainer">
+            <!-- Dynamic tabs generate here -->
+            <button class="tab add-tab-btn" onclick="createNewTab()">+ New Tab</button>
+        </div>
+        <div class="url-row">
+            <button class="toggle-btn" id="engineToggle" onclick="toggleEngine()">Engine: Corsway</button>
+            <input type="url" id="urlInput" placeholder="https://google.com" value="https://google.com">
+            <button onclick="triggerLoad()">Go</button>
         </div>
     </div>
-
-    <div class="toolbar">
-        <button class="nav-btn" id="back-btn" title="Back">
-            <svg viewBox="0 0 16 16"><path d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/></svg>
-        </button>
-        <button class="nav-btn" id="forward-btn" title="Forward">
-            <svg viewBox="0 0 16 16"><path d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
-        </button>
-        <button class="nav-btn" id="refresh-btn" title="Refresh">
-            <svg viewBox="0 0 16 16"><path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-1.395 1.443a2.5 2.5 0 0 0-3.178-1.24.5.5 0 1 1-.52-.855 3.5 3.5 0 0 1 4.73 1.586l.244.429H11.3a1 1 0 0 0-.162-.162z"/><path d="M3.5 11a4.24 4.24 0 0 0 .148.5H1c-.28 0-.5.22-.5.5s.22.5.5.5h3.5c.28 0 .5-.22.5-.5V8.5c0-.28-.22-.5-.5-.5s-.5.22-.5.5v1.393A4.478 4.478 0 0 1 3.5 11z"/></svg>
-        </button>
+    
+    <div id="error-banner"></div>
+    
+    <div class="viewer-container" id="viewerContainer">
+        <!-- Dynamic iframes load here -->
+    </div>
+        <script>
+        let currentEngine = "corsway"; // Options: "corsway" or "corsanywhere"
+        let proxyBase = "https://proxy.2677929.xyz/";
         
-        <div class="address-bar-container">
-            <input type="text" class="address-bar" id="url-input" placeholder="Enter URL (e.g. google.com)" value="google.com">
-        </div>
-    </div>
+        let tabCount = 0;
+        let activeTabId = null;
+        const tabsData = {};
 
-    <div class="content-area">
-        <iframe id="browser-viewport" src=""></iframe>
-    </div>
+        // Instantiate first default initialization tab
+        createNewTab("https://google.com");
 
-    <script>
-        const urlInput = document.getElementById('url-input');
-        const viewport = document.getElementById('browser-viewport');
-        const refreshBtn = document.getElementById('refresh-btn');
+        function toggleEngine() {
+            const btn = document.getElementById('engineToggle');
+            if (currentEngine === "corsway") {
+                currentEngine = "corsanywhere";
+                proxyBase = "https://cors-anywhere.herokuapp.com/";
+                btn.textContent = "Engine: CORS Anywhere";
+                btn.classList.add('active-engine');
+            } else {
+                currentEngine = "corsway";
+                proxyBase = "https://2677929.xyz";
+                btn.textContent = "Engine: Corsway";
+                btn.classList.remove('active-engine');
+            }
+        }
 
-        async function initProxy() {
-            if ('serviceWorker' in navigator) {
-                try {
-                    // Registers the helper script directly inside the /edge/ folder scope
-                    await navigator.serviceWorker.register('./sw.js', { scope: './' });
-                    console.log('Edge Service Worker Interceptor Active.');
-                    loadUrl();
-                } catch (err) {
-                    console.error('Service Worker registration failed:', err);
+        function createNewTab(initialUrl = "https://google.com") {
+            tabCount++;
+            const tabId = `tab-${tabCount}`;
+
+            // 1. Create Tab Element
+            const tabEl = document.createElement('div');
+            tabEl.className = 'tab';
+            tabEl.id = `btn-${tabId}`;
+            tabEl.onclick = (e) => {
+                if(e.target.classList.contains('tab-close')) return;
+                switchTab(tabId);
+            };
+            
+            let displayTitle = "New Tab";
+            try { displayTitle = new URL(initialUrl).hostname; } catch(e){}
+
+            tabEl.innerHTML = `
+                <span class="tab-title">${displayTitle}</span>
+                <span class="tab-close" onclick="closeTab('${tabId}')">×</span>
+            `;
+
+            const container = document.getElementById('tabsContainer');
+            container.insertBefore(tabEl, container.lastElementChild);
+
+            // 2. Create corresponding Iframe Element
+            const iframe = document.createElement('iframe');
+            iframe.id = `frame-${tabId}`;
+            iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
+            document.getElementById('viewerContainer').appendChild(iframe);
+
+            tabsData[tabId] = { url: initialUrl };
+
+            switchTab(tabId);
+            if(initialUrl) {
+                executeProxyFetch(tabId, initialUrl);
+            }
+        }
+
+        function switchTab(tabId) {
+            activeTabId = tabId;
+
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('iframe').forEach(f => f.classList.remove('active'));
+
+            document.getElementById(`btn-${tabId}`).classList.add('active');
+            document.getElementById(`frame-${tabId}`).classList.add('active');
+
+            document.getElementById('urlInput').value = tabsData[tabId].url;
+            document.getElementById('error-banner').style.display = 'none';
+        }
+
+        function closeTab(tabId) {
+            const tabBtn = document.getElementById(`btn-${tabId}`);
+            const tabFrame = document.getElementById(`frame-${tabId}`);
+            
+            if(tabBtn) tabBtn.remove();
+            if(tabFrame) tabFrame.remove();
+            delete tabsData[tabId];
+
+            if (activeTabId === tabId) {
+                const remainingTabs = Object.keys(tabsData);
+                if(remainingTabs.length > 0) {
+                    switchTab(remainingTabs[remainingTabs.length - 1]);
+                } else {
+                    createNewTab("");
                 }
             }
         }
 
-        function loadUrl() {
-            let input = urlInput.value.trim();
-            if (!input) return;
-
-            // Remove existing protocols so we pass a clean domain string
-            input = input.replace(/^(https?:\/\/)?(www\.)?/, '');
+        function triggerLoad() {
+            if(!activeTabId) return;
+            const inputUrl = document.getElementById('urlInput').value.trim();
+            if(!inputUrl) return;
             
-            // 404 PROOF: Points directly to your proxy address from the first frame render!
-            viewport.src = `https://proxy.2677929.xyz/{input}`;
+            executeProxyFetch(activeTabId, inputUrl);
         }
 
-        urlInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') loadUrl();
-        });
+        async function executeProxyFetch(tabId, inputUrl) {
+            let targetUrl = inputUrl;
+            if (!/^https?:\/\//i.test(targetUrl)) {
+                targetUrl = 'https://' + targetUrl;
+            }
+            
+            tabsData[tabId].url = targetUrl;
+            document.getElementById('urlInput').value = targetUrl;
 
-        refreshBtn.addEventListener('click', () => {
-            viewport.src = viewport.src;
-        });
+            try {
+                document.querySelector(`#btn-${tabId} .tab-title`).textContent = new URL(targetUrl).hostname;
+            } catch(e){}
 
-        initProxy();
+            const errorBanner = document.getElementById('error-banner');
+            const iframe = document.getElementById(`frame-${tabId}`);
+            errorBanner.style.display = 'none';
+
+            const targetProxyUrl = `${proxyBase}${targetUrl}`;
+
+            // Build conditional headers based on active engine selection
+            const requestHeaders = new Headers();
+            if (currentEngine === "corsanywhere") {
+                requestHeaders.append("X-Requested-With", "XMLHttpRequest");
+            }
+
+            try {
+                const response = await fetch(targetProxyUrl, {
+                    method: 'GET',
+                    headers: requestHeaders
+                });
+                
+                if (!response.ok) {
+                    if (currentEngine === "corsanywhere" && response.status === 403) {
+                        throw new Error("CORS Anywhere requires temporary access activation. Click the error to activate.");
+                    }
+                    throw new Error(`Proxy breakdown: ${response.status}`);
+                }
+                
+                let rawHtml = await response.text();
+                
+                // Disarm frame-busting scripts
+                rawHtml = rawHtml
+                    .replace(/top\.location/g, 'self.location')
+                    .replace(/window\.top/g, 'window.self')
+                    .replace(/window\.frameElement/g, 'null')
+                    .replace(/parent\.location/g, 'self.location');
+                
+                const parsedUrl = new URL(targetUrl);
+                const targetOrigin = parsedUrl.origin;
+
+                // Live DOM Observer script to bind paths to whichever proxy is currently running
+                const injectionScript = `
+                    <script>
+                        (function() {
+                            const PROXY = "${proxyBase}";
+                            const ORIGIN = "${targetOrigin}";
+                            const ENGINE = "${currentEngine}";
+
+                            function rewriteUrl(url) {
+                                if (!url) return url;
+                                if (url.startsWith('javascript:') || url.startsWith('data:')) return url;
+                                if (url.startsWith(PROXY)) return url;
+                                
+                                if (url.startsWith('/')) {
+                                    return PROXY + ORIGIN + url;
+                                }
+                                if (!/^https?:\/\//i.test(url)) {
+                                    return PROXY + ORIGIN + '/' + url;
+                                }
+                                return PROXY + url;
+                            }
+
+                            function processElements() {
+                                document.querySelectorAll('a[href], link[href], script[src], img[src], form[action]').forEach(el => {
+                                    if (el.tagName === 'A' || el.tagName === 'LINK') {
+                                        const href = el.getAttribute('href');
+                                        if (href && !href.startsWith(PROXY)) el.setAttribute('href', rewriteUrl(href));
+                                    } else if (el.tagName === 'SCRIPT' || el.tagName === 'IMG') {
+                                        const src = el.getAttribute('src');
+                                        if (src && !src.startsWith(PROXY)) el.setAttribute('src', rewriteUrl(src));
+                                    } else if (el.tagName === 'FORM') {
+                                        const action = el.getAttribute('action');
+                                        if (action && !action.startsWith(PROXY)) el.setAttribute('action', rewriteUrl(action));
+                                    }
+                                });
+                            }
+
+                            window.addEventListener('DOMContentLoaded', processElements);
+                            const observer = new MutationObserver(processElements);
+                            observer.observe(document.documentElement, { childList: true, subtree: true });
+                        })();
+                    <\/script>
+                `;
+
+                const baseTag = `<base href="${targetOrigin}${parsedUrl.pathname}">`;
+                iframe.srcdoc = baseTag + injectionScript + rawHtml;
+            } catch (err) {
+                console.error(err);
+                errorBanner.textContent = `Render Error: ${err.message}`;
+                errorBanner.style.display = 'block';
+                
+                // If using demo cors-anywhere instance, provide shortcut link to open lock authorization portal
+                if (currentEngine === "corsanywhere" && err.message.includes("activation")) {
+                    errorBanner.style.cursor = "pointer";
+                    errorBanner.onclick = () => window.open("https://cors-anywhere.herokuapp.com", "_blank");
+                } else {
+                    errorBanner.style.cursor = "default";
+                    errorBanner.onclick = null;
+                }
+            }
+        }
+
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') triggerLoad();
+        });
     </script>
 </body>
 </html>
