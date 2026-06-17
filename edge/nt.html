@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle Background with Clock and Links</title>
+    <style>
+        /* Base Page Styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050510; /* Very dark background */
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+        }
+
+        /* Particle Canvas */
+        #particle-canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1; /* Sits behind content */
+        }
+
+        /* Central Layout Wrapper */
+        .main-container {
+            position: relative;
+            z-index: 2; /* Sits above particles */
+            display: flex;
+            flex-direction: column; /* Stacks clock vertically above squares */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 40px; /* Space between clock and squares */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Digital Clock Styling */
+        .clock {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #e6e6fa;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.6); /* Purple glow */
+        }
+
+        /* Container for the 5 squares */
+        .squares-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            max-width: 100%;
+            overflow-x: auto; /* Adds scrollbar only if screen is too narrow */
+        }
+
+        /* Individual Square Design */
+        .square {
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0; /* Prevents squeezing on smaller screens */
+            background: rgba(138, 43, 226, 0.2); /* Semi-transparent purple */
+            border: 2px solid rgba(221, 160, 221, 0.6);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #e6e6fa;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+        }
+
+        /* Hover and Focus States */
+        .square:hover {
+            background: rgba(138, 43, 226, 0.6);
+            border-color: #dda0dd;
+            transform: scale(1.08); /* Gentle pop out effect */
+            box-shadow: 0 0 25px rgba(221, 160, 221, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas for JavaScript Particle Effects -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Main Stack Wrapper -->
+    <div class="main-container">
+        
+        <!-- Live Clock Display -->
+        <div class="clock" id="live-clock">00:00:00</div>
+
+        <!-- 5 Squares aligned horizontally -->
+        <div class="squares-container">
+            <!-- Replace "https://your-url-1.com" with your actual destination URL -->
+            <a href="https://google.com" class="square">Google</a>
+            <a href="https://gn-math.dev" class="square">Games</a>
+            <a href="https://discord.com/app" class="square">Discord</a>
+            <a href="https://zaka.qzz.io/panick/links.txt" class="square">More Links</a>
+            <a href="https://html.duckduckgo.com/html/" class="square">DuckDuckGo</a>
+        </div>
+    </div>
+
+    <script>
+        // --- Live Clock Logic ---
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // Format to 12-hour clock (Optional: remove ampm logic for 24-hour style)
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // The hour '0' should be '12'
+            const formattedHours = String(hours).padStart(2, '0');
+
+            document.getElementById('live-clock').textContent = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+        }
+        // Update the clock every single second
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial run to prevent delay on load
+
+
+        // --- Particle Background Logic ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particlesArray = [];
+        const numberOfParticles = 100;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                const purpleColors = ['#9400D3', '#8A2BE2', '#4B0082', '#DA70D6', '#BA55D3'];
+                this.color = purpleColors[Math.floor(Math.random() * purpleColors.length)];
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width) this.speedX = -this.speedX;
+                if (this.y < 0 || this.y > canvas.height) this.speedY = -this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < numberOfParticles; i++) {
+            particlesArray.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+
+</body>
+</html>
