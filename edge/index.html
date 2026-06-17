@@ -186,7 +186,7 @@
         </div>
         <div class="url-row">
             <button class="toggle-btn" id="engineToggle" onclick="toggleEngine()">Engine: Corsway</button>
-            <input type="url" id="urlInput" placeholder="https://zaka13x.github.io/WinHTML11/edge/nt.html" value="https://zaka13x.github.io/WinHTML11/edge/nt.html">
+            <input type="url" id="urlInput" placeholder="https://google.com" value="">
             <button onclick="triggerLoad()">Go</button>
         </div>
     </div>
@@ -204,29 +204,33 @@
         let activeTabId = null;
         const tabsData = {};
 
-        // Instantiate first default initialization tab
-        createNewTab("https://zaka13x.github.io/WinHTML11/edge/nt.html");
+        // Run startup routines strictly after the webserver DOM elements initialize
+        window.onload = function() {
+            // ====================================================================
+            // DEFAULT STARTUP URL ASSIGNED
+            // ====================================================================
+            createNewTab("https://zaka13x.github.io/WinHTML11/edge/nt.html");
+        };
 
         function toggleEngine() {
             const btn = document.getElementById('engineToggle');
             if (currentEngine === "corsway") {
                 currentEngine = "corsanywhere";
-                proxyBase = "https://cors-anywhere.herokuapp.com/";
-                btn.textContent = "Engine: CORS Anywhere";
+                proxyBase = "https://cors-anywhere.herokuapp.com";
+                btn.textContent = "CORS Anywhere";
                 btn.classList.add('active-engine');
             } else {
                 currentEngine = "corsway";
                 proxyBase = "https://proxy.2677929.xyz/";
-                btn.textContent = "Engine: Corsway";
+                btn.textContent = "Corsway";
                 btn.classList.remove('active-engine');
             }
         }
 
-        function createNewTab(initialUrl = "https://zaka13x.github.io/WinHTML11/edge/nt.html") {
+        function createNewTab(initialUrl = "") {
             tabCount++;
             const tabId = `tab-${tabCount}`;
 
-            // 1. Create Tab Element
             const tabEl = document.createElement('div');
             tabEl.className = 'tab';
             tabEl.id = `btn-${tabId}`;
@@ -236,7 +240,9 @@
             };
             
             let displayTitle = "New Tab";
-            try { displayTitle = new URL(initialUrl).hostname; } catch(e){}
+            if (initialUrl) {
+                try { displayTitle = new URL(initialUrl).hostname; } catch(e){}
+            }
 
             tabEl.innerHTML = `
                 <span class="tab-title">${displayTitle}</span>
@@ -246,7 +252,6 @@
             const container = document.getElementById('tabsContainer');
             container.insertBefore(tabEl, container.lastElementChild);
 
-            // 2. Create corresponding Iframe Element
             const iframe = document.createElement('iframe');
             iframe.id = `frame-${tabId}`;
             iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
@@ -318,7 +323,6 @@
 
             const targetProxyUrl = `${proxyBase}${targetUrl}`;
 
-            // Build conditional headers based on active engine selection
             const requestHeaders = new Headers();
             if (currentEngine === "corsanywhere") {
                 requestHeaders.append("X-Requested-With", "XMLHttpRequest");
@@ -334,7 +338,7 @@
                     if (currentEngine === "corsanywhere" && response.status === 403) {
                         throw new Error("CORS Anywhere requires temporary access activation. Click the error to activate.");
                     }
-                    throw new Error(`Proxy breakdown: ${response.status}`);
+                    throw new Error(`error: ${response.status}`);
                 }
                 
                 let rawHtml = await response.text();
@@ -349,13 +353,12 @@
                 const parsedUrl = new URL(targetUrl);
                 const targetOrigin = parsedUrl.origin;
 
-                // Live DOM Observer script to bind paths to whichever proxy is currently running
+                // Live DOM Observer script
                 const injectionScript = `
                     <script>
                         (function() {
                             const PROXY = "${proxyBase}";
                             const ORIGIN = "${targetOrigin}";
-                            const ENGINE = "${currentEngine}";
 
                             function rewriteUrl(url) {
                                 if (!url) return url;
@@ -400,10 +403,9 @@
                 errorBanner.textContent = `Render Error: ${err.message}`;
                 errorBanner.style.display = 'block';
                 
-                // If using demo cors-anywhere instance, provide shortcut link to open lock authorization portal
                 if (currentEngine === "corsanywhere" && err.message.includes("activation")) {
                     errorBanner.style.cursor = "pointer";
-                    errorBanner.onclick = () => window.open("https://cors-anywhere.herokuapp.com", "_blank");
+                    errorBanner.onclick = () => window.open("https://herokuapp.comcorsdemo", "_blank");
                 } else {
                     errorBanner.style.cursor = "default";
                     errorBanner.onclick = null;
