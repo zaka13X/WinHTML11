@@ -171,7 +171,7 @@
     <div class="tab-bar">
         <div class="tab active">
             <div class="tab-icon"></div>
-            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Edge Custom Proxy</span>
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Edge Hash-Proxy</span>
             <div class="tab-close">&times;</div>
         </div>
     </div>
@@ -204,9 +204,9 @@
         async function initProxy() {
             if ('serviceWorker' in navigator) {
                 try {
-                    // Update scope to match execution environment within the subfolder
+                    // Lock the service worker scope directly to the /edge/ folder
                     await navigator.serviceWorker.register('./sw.js', { scope: './' });
-                    console.log('Proxy Interceptor Activated inside /edge/ subfolder.');
+                    console.log('Hash-based Proxy Active.');
                     loadUrl();
                 } catch (err) {
                     console.error('Service Worker registration failed:', err);
@@ -220,8 +220,9 @@
 
             input = input.replace(/^(https?:\/\/)?(www\.)?/, '');
             
-            // Route structural frame directly within our controlled /edge/ directory
-            viewport.src = `./browser/https://${input}`;
+            // By utilizing #/, the host always finds index.html instead of a 404.
+            // The service worker will see the request change and intercept sub-resources.
+            viewport.src = `https://proxy.2677929.xyz/{input}`;
         }
 
         urlInput.addEventListener('keypress', (e) => {
