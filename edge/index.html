@@ -195,8 +195,7 @@
     <div class="content-area">
         <iframe id="browser-viewport" src=""></iframe>
     </div>
-
-    <script>
+        <script>
         const urlInput = document.getElementById('url-input');
         const viewport = document.getElementById('browser-viewport');
         const refreshBtn = document.getElementById('refresh-btn');
@@ -204,7 +203,7 @@
         async function initProxy() {
             if ('serviceWorker' in navigator) {
                 try {
-                    // Lock the service worker scope directly to the /edge/ folder
+                    // Lock the service worker scope to the current folder
                     await navigator.serviceWorker.register('./sw.js', { scope: './' });
                     console.log('Hash-based Proxy Active.');
                     loadUrl();
@@ -218,10 +217,10 @@
             let input = urlInput.value.trim();
             if (!input) return;
 
+            // Remove any existing protocols typed out by the user
             input = input.replace(/^(https?:\/\/)?(www\.)?/, '');
             
-            // By utilizing #/, the host always finds index.html instead of a 404.
-            // The service worker will see the request change and intercept sub-resources.
+            // Constructs target as: https://2677929.xyz
             viewport.src = `https://proxy.2677929.xyz/{input}`;
         }
 
