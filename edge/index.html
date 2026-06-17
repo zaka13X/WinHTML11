@@ -171,7 +171,7 @@
     <div class="tab-bar">
         <div class="tab active">
             <div class="tab-icon"></div>
-            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Custom Proxy Browser</span>
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Edge Custom Proxy</span>
             <div class="tab-close">&times;</div>
         </div>
     </div>
@@ -193,7 +193,6 @@
     </div>
 
     <div class="content-area">
-        <!-- The iframe targets a custom scope folder monitored by the Service Worker -->
         <iframe id="browser-viewport" src=""></iframe>
     </div>
 
@@ -202,13 +201,12 @@
         const viewport = document.getElementById('browser-viewport');
         const refreshBtn = document.getElementById('refresh-btn');
 
-        // Registers the lightweight interceptor worker
         async function initProxy() {
             if ('serviceWorker' in navigator) {
                 try {
-                    // Scope limits intercepting to requests inside the simulated /browser/ folder structure
-                    await navigator.serviceWorker.register('/sw.js', { scope: './browser/' });
-                    console.log('Custom Proxy Interceptor Registered.');
+                    // Update scope to match execution environment within the subfolder
+                    await navigator.serviceWorker.register('./sw.js', { scope: './' });
+                    console.log('Proxy Interceptor Activated inside /edge/ subfolder.');
                     loadUrl();
                 } catch (err) {
                     console.error('Service Worker registration failed:', err);
@@ -220,10 +218,9 @@
             let input = urlInput.value.trim();
             if (!input) return;
 
-            // Normalize input format
             input = input.replace(/^(https?:\/\/)?(www\.)?/, '');
             
-            // Route the initial iframe launch through our tracked service worker directory
+            // Route structural frame directly within our controlled /edge/ directory
             viewport.src = `./browser/https://${input}`;
         }
 
