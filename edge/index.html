@@ -205,7 +205,7 @@
         const tabsData = {};
 
         // Instantiate first default initialization tab
-        createNewTab("https://google.com");
+        createNewTab("https://zaka13x.github.io/WinHTML11/edge/nt.html");
 
         function toggleEngine() {
             const btn = document.getElementById('engineToggle');
@@ -216,13 +216,13 @@
                 btn.classList.add('active-engine');
             } else {
                 currentEngine = "corsway";
-                proxyBase = "https://2677929.xyz";
+                proxyBase = "https://proxy.2677929.xyz/";
                 btn.textContent = "Engine: Corsway";
                 btn.classList.remove('active-engine');
             }
         }
 
-        function createNewTab(initialUrl = "https://google.com") {
+        function createNewTab(initialUrl = "https://zaka13x.github.io/WinHTML11/edge/nt.html") {
             tabCount++;
             const tabId = `tab-${tabCount}`;
 
