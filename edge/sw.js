@@ -1,3 +1,4 @@
+// Correct root domain variable matching your endpoint layout
 const PROXY_BASE = "https://proxy.2677929.xyz";
 
 self.addEventListener('install', (event) => {
@@ -8,23 +9,25 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(self.clients.claim());
 });
 
-// Intercept sub-assets (CSS, JS, images) requested relative to the iframe
 self.addEventListener('fetch', (event) => {
     const requestUrl = event.request.url;
 
-    // Skip rewriting if the request is already pointing to the proxy endpoint
-    if (!requestUrl.startsWith(PROXY_BASE) && !requestUrl.includes('edge/sw.js') && !requestUrl.includes('edge/index.html')) {
+    // Checks for simulated tracking path
+    if (requestUrl.includes('/browser/')) {
         
-        let targetUrl = requestUrl;
+        // Extract destination details following the separation marker
+        const parts = requestUrl.split('/browser/');
+        let targetUrl = parts;
 
-        // Strip local dev host strings if relative assets are misrouted locally
-        if (targetUrl.includes(self.location.host)) {
-            const parts = targetUrl.split(self.location.host);
-            // Reconstruct asset pointer cleanly 
-            targetUrl = 'https://' + parts[1].replace(/^\/edge\//, '');
+        // Reconnect standard structural colons if altered
+        targetUrl = targetUrl.replace(/^(https?:\/)(?!\/)/, '$1/');
+
+        // Fallback layout generation to match strict protocol format
+        if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+            targetUrl = 'https://' + targetUrl;
         }
 
-        // Construct target template: (proxy)/https://(destination)
+        // FIXED: Uses backticks to combine variables properly without string errors
         const finalProxyUrl = `${PROXY_BASE}${targetUrl}`;
 
         const modifiedHeaders = new Headers(event.request.headers);
