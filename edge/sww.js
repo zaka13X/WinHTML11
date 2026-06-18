@@ -1,4 +1,4 @@
-const PROXY_BASE = "https://proxy.2677929.xyz";
+const PROXY_BASE = "https://myprivatelinks-1.onrender.com/";
 
 self.addEventListener('install', (event) => {
     self.skipWaiting();
