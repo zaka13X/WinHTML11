@@ -36,7 +36,7 @@ self.addEventListener('fetch', (event) => {
         }
 
         // Append resource exactly as required: https://2677929.xyzhttps://domain.com/asset.js
-        const finalProxyUrl = `${PROXY_BASE}${targetUrl}`;
+        const finalProxyUrl = `${PROXY_BASE}/${targetUrl}`;
 
         const modifiedHeaders = new Headers(event.request.headers);
 
@@ -47,7 +47,7 @@ self.addEventListener('fetch', (event) => {
                 credentials: event.request.credentials,
                 mode: 'cors'
             }).catch(err => {
-                return new Response(`Proxy Failure on Asset: ${err.message}`, { 
+                return new Response(`failed on ${err.message}`, { 
                     status: 502,
                     headers: { 'Content-Type': 'text/plain' }
                 });
