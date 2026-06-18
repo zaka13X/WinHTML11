@@ -205,7 +205,7 @@
             if ('serviceWorker' in navigator) {
                 try {
                     // Registers the helper script directly inside the /edge/ folder scope
-                    await navigator.serviceWorker.register('./sw.js', { scope: './' });
+                    await navigator.serviceWorker.register('./sww.js', { scope: './' });
                     console.log('Edge Service Worker Interceptor Active.');
                     loadUrl();
                 } catch (err) {
